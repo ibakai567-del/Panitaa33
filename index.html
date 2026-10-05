@@ -1,0 +1,4625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Bright Automotive Smart Factory</title>
+
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  background:#f1f5f9;
+  color:#0f172a;
+}
+
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+#topbar{
+
+  position:fixed;
+  z-index:1000;
+
+  top:0;
+  left:0;
+  right:0;
+
+  height:64px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:8px 18px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.98),
+      rgba(239,249,255,.97),
+      rgba(255,255,255,.98)
+    );
+
+  border-bottom:1px solid #bae6fd;
+
+  box-shadow:
+    0 5px 25px rgba(15,23,42,.15);
+}
+
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+
+.logoMark{
+
+  width:40px;
+  height:40px;
+
+  display:grid;
+  place-items:center;
+
+  border:2px solid #0284c7;
+
+  border-radius:9px;
+
+  color:#0284c7;
+
+  font-size:20px;
+
+  background:#f0f9ff;
+
+  box-shadow:
+    0 0 18px rgba(14,165,233,.2);
+}
+
+
+.logoTitle{
+
+  font-size:15px;
+
+  font-weight:bold;
+
+  letter-spacing:2px;
+
+  color:#0f172a;
+}
+
+
+.logoSub{
+
+  margin-top:3px;
+
+  color:#64748b;
+
+  font-size:8px;
+
+  letter-spacing:2px;
+}
+
+
+.topStatus{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:18px;
+
+  font-size:9px;
+
+  color:#64748b;
+
+  letter-spacing:1px;
+}
+
+
+.live{
+
+  color:#16a34a;
+
+  font-weight:bold;
+}
+
+
+.liveDot{
+
+  display:inline-block;
+
+  width:8px;
+  height:8px;
+
+  margin-right:5px;
+
+  border-radius:50%;
+
+  background:#22c55e;
+
+  box-shadow:
+    0 0 12px #22c55e;
+}
+
+
+/* =========================================================
+   LEFT FACTORY MAP
+========================================================= */
+
+#navigationPanel{
+
+  position:fixed;
+  z-index:900;
+
+  left:14px;
+  top:78px;
+
+  width:275px;
+
+  padding:14px;
+
+  background:
+    rgba(255,255,255,.94);
+
+  border:1px solid #bae6fd;
+
+  border-radius:12px;
+
+  backdrop-filter:blur(14px);
+
+  box-shadow:
+    0 15px 45px rgba(15,23,42,.16);
+}
+
+
+.panelHeader{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  margin-bottom:12px;
+
+  color:#0369a1;
+
+  font-size:10px;
+
+  font-weight:bold;
+
+  letter-spacing:2px;
+}
+
+
+.panelTag{
+
+  padding:4px 7px;
+
+  border:1px solid #7dd3fc;
+
+  border-radius:4px;
+
+  color:#0284c7;
+
+  background:#f0f9ff;
+
+  font-size:7px;
+}
+
+
+.map{
+
+  position:relative;
+
+  height:175px;
+
+  background:
+
+    linear-gradient(
+      90deg,
+      transparent 49%,
+      rgba(14,165,233,.13) 50%,
+      transparent 51%
+    ),
+
+    linear-gradient(
+      transparent 49%,
+      rgba(14,165,233,.13) 50%,
+      transparent 51%
+    ),
+
+    #f8fafc;
+
+  border:1px solid #bae6fd;
+
+  border-radius:8px;
+
+  overflow:hidden;
+}
+
+
+.mapRoad{
+
+  position:absolute;
+
+  background:#e2e8f0;
+}
+
+
+.mapRoad.horizontal{
+
+  left:0;
+  right:0;
+
+  top:80px;
+
+  height:38px;
+}
+
+
+.mapRoad.vertical{
+
+  top:0;
+  bottom:0;
+
+  left:119px;
+
+  width:38px;
+}
+
+
+.mapStation{
+
+  position:absolute;
+
+  width:20px;
+  height:20px;
+
+  display:grid;
+
+  place-items:center;
+
+  border:1px solid #0284c7;
+
+  border-radius:4px;
+
+  background:#e0f2fe;
+
+  color:#0369a1;
+
+  font-size:6px;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+
+.mapStation:hover{
+
+  transform:scale(1.15);
+
+}
+
+
+.mapStation.active{
+
+  background:#0284c7;
+
+  color:white;
+
+  box-shadow:
+    0 0 15px rgba(14,165,233,.5);
+}
+
+
+.mapStation.alarm{
+
+  background:#ef4444;
+
+  border-color:#dc2626;
+
+  color:white;
+}
+
+
+#mapM01{left:20px;top:35px}
+#mapM02{left:55px;top:35px}
+#mapM03{left:90px;top:35px}
+#mapM04{left:125px;top:35px}
+#mapM05{left:160px;top:35px}
+#mapM06{left:195px;top:35px}
+
+#mapM07{left:20px;top:125px}
+#mapM08{left:55px;top:125px}
+#mapM09{left:90px;top:125px}
+#mapM10{left:125px;top:125px}
+#mapM11{left:160px;top:125px}
+#mapM12{left:195px;top:125px}
+
+
+.mapLabel{
+
+  position:absolute;
+
+  left:8px;
+  bottom:7px;
+
+  color:#94a3b8;
+
+  font-size:7px;
+}
+
+
+.navigationHelp{
+
+  margin-top:11px;
+
+  color:#64748b;
+
+  font-size:8px;
+
+  line-height:1.7;
+}
+
+
+.navigationHelp b{
+
+  color:#0284c7;
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+#dashboard{
+
+  position:fixed;
+  z-index:1000;
+
+  right:14px;
+  top:78px;
+
+  width:400px;
+
+  max-height:
+    calc(100vh - 92px);
+
+  overflow-y:auto;
+
+  padding:16px;
+
+  background:
+    rgba(255,255,255,.96);
+
+  border:1px solid #bae6fd;
+
+  border-radius:14px;
+
+  box-shadow:
+    0 20px 60px rgba(15,23,42,.2);
+
+  backdrop-filter:blur(15px);
+}
+
+
+#dashboard::-webkit-scrollbar{
+  width:4px;
+}
+
+
+#dashboard::-webkit-scrollbar-thumb{
+
+  background:#7dd3fc;
+
+  border-radius:10px;
+}
+
+
+.dashboardTop{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:flex-start;
+}
+
+
+.machineCode{
+
+  color:#0284c7;
+
+  font-size:9px;
+
+  letter-spacing:2px;
+}
+
+
+#machineName{
+
+  margin:
+    4px 0 3px;
+
+  color:#0f172a;
+
+  font-size:19px;
+}
+
+
+#machineDescription{
+
+  color:#64748b;
+
+  font-size:8px;
+}
+
+
+.statusBadge{
+
+  padding:7px 10px;
+
+  border-radius:20px;
+
+  font-size:8px;
+
+  font-weight:bold;
+
+  letter-spacing:1px;
+}
+
+
+.statusNormal{
+
+  background:#dcfce7;
+
+  color:#15803d;
+
+  border:1px solid #86efac;
+}
+
+
+.statusWarning{
+
+  background:#fef9c3;
+
+  color:#a16207;
+
+  border:1px solid #fde047;
+}
+
+
+.statusAlarm{
+
+  background:#fee2e2;
+
+  color:#b91c1c;
+
+  border:1px solid #fca5a5;
+}
+
+
+.metrics{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:7px;
+
+  margin-top:14px;
+}
+
+
+.metric{
+
+  padding:11px 8px;
+
+  background:#f8fafc;
+
+  border:1px solid #dbeafe;
+
+  border-radius:8px;
+}
+
+
+.metricLabel{
+
+  color:#64748b;
+
+  font-size:7px;
+
+  letter-spacing:1px;
+}
+
+
+.metricValue{
+
+  margin-top:6px;
+
+  color:#0f172a;
+
+  font-size:18px;
+
+  font-weight:bold;
+}
+
+
+.alarmBox{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  margin-top:8px;
+
+  padding:10px;
+
+  border:1px solid #fecaca;
+
+  background:#fff7f7;
+
+  border-radius:7px;
+}
+
+
+.alarmLabel{
+
+  color:#64748b;
+
+  font-size:8px;
+}
+
+
+.alarmValue{
+
+  color:#dc2626;
+
+  font-size:17px;
+
+  font-weight:bold;
+}
+
+
+.sectionTitle{
+
+  margin:15px 0 8px;
+
+  color:#0369a1;
+
+  font-size:8px;
+
+  font-weight:bold;
+
+  letter-spacing:2px;
+}
+
+
+.trendRow{
+
+  display:flex;
+
+  align-items:center;
+
+  height:35px;
+}
+
+
+.trendName{
+
+  width:35px;
+
+  color:#64748b;
+
+  font-size:7px;
+}
+
+
+.trendBars{
+
+  flex:1;
+
+  height:30px;
+
+  display:flex;
+
+  align-items:flex-end;
+
+  gap:2px;
+}
+
+
+.trendBar{
+
+  flex:1;
+
+  min-width:2px;
+
+  border-radius:
+    2px 2px 0 0;
+}
+
+
+.conditions{
+
+  display:grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:4px;
+}
+
+
+.condition{
+
+  min-height:38px;
+
+  padding:6px;
+
+  background:#f8fafc;
+
+  border:1px solid #e2e8f0;
+
+  border-radius:5px;
+
+  font-size:7px;
+}
+
+
+.conditionName{
+
+  color:#64748b;
+}
+
+
+.conditionStatus{
+
+  margin-top:3px;
+
+  font-weight:bold;
+}
+
+
+.conditionNormal{
+  color:#16a34a;
+}
+
+
+.conditionWarning{
+  color:#ca8a04;
+}
+
+
+.conditionAlarm{
+  color:#dc2626;
+}
+
+
+/* =========================================================
+   PROXIMITY
+========================================================= */
+
+#proximity{
+
+  position:fixed;
+
+  z-index:950;
+
+  left:50%;
+  bottom:65px;
+
+  transform:
+    translateX(-50%);
+
+  min-width:330px;
+
+  padding:10px 16px;
+
+  text-align:center;
+
+  background:
+    rgba(255,255,255,.94);
+
+  border:1px solid #7dd3fc;
+
+  border-radius:8px;
+
+  opacity:0;
+
+  transition:.25s;
+
+  pointer-events:none;
+
+  box-shadow:
+    0 10px 30px rgba(15,23,42,.18);
+}
+
+
+#proximity.visible{
+  opacity:1;
+}
+
+
+#proximityCode{
+
+  color:#0284c7;
+
+  font-size:8px;
+
+  letter-spacing:2px;
+}
+
+
+#proximityText{
+
+  margin-top:4px;
+
+  color:#334155;
+
+  font-size:10px;
+}
+
+
+/* =========================================================
+   CROSSHAIR
+========================================================= */
+
+#crosshair{
+
+  position:fixed;
+
+  z-index:1200;
+
+  left:50%;
+  top:50%;
+
+  width:18px;
+  height:18px;
+
+  transform:
+    translate(-50%,-50%);
+
+  pointer-events:none;
+}
+
+
+#crosshair:before,
+#crosshair:after{
+
+  content:"";
+
+  position:absolute;
+
+  background:
+    rgba(2,132,199,.8);
+}
+
+
+#crosshair:before{
+
+  width:18px;
+  height:1px;
+
+  top:9px;
+  left:0;
+}
+
+
+#crosshair:after{
+
+  height:18px;
+  width:1px;
+
+  left:9px;
+  top:0;
+}
+
+
+/* =========================================================
+   BOTTOM HELP
+========================================================= */
+
+#bottomHelp{
+
+  position:fixed;
+
+  z-index:1000;
+
+  left:50%;
+  bottom:14px;
+
+  transform:
+    translateX(-50%);
+
+  padding:8px 16px;
+
+  border:1px solid #bae6fd;
+
+  border-radius:20px;
+
+  background:
+    rgba(255,255,255,.94);
+
+  color:#64748b;
+
+  font-size:8px;
+
+  letter-spacing:1px;
+
+  box-shadow:
+    0 8px 25px rgba(15,23,42,.12);
+}
+
+
+#bottomHelp b{
+  color:#0284c7;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:1000px){
+
+  #navigationPanel{
+    display:none;
+  }
+
+  #dashboard{
+    width:350px;
+  }
+
+}
+
+
+@media(max-width:700px){
+
+  #dashboard{
+
+    width:310px;
+
+    right:8px;
+
+    top:72px;
+
+  }
+
+  .topStatus{
+    display:none;
+  }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =======================================================
+     TOP BAR
+======================================================== -->
+
+<div id="topbar">
+
+  <div class="logo">
+
+    <div class="logoMark">
+      ◈
+    </div>
+
+    <div>
+
+      <div class="logoTitle">
+        AUTOMOTIVE SMART FACTORY
+      </div>
+
+      <div class="logoSub">
+        BRIGHT INDUSTRY 4.0 · DIGITAL TWIN
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="topStatus">
+
+    <span class="live">
+      <i class="liveDot"></i>
+      FACTORY ONLINE
+    </span>
+
+    <span>
+      12 PRODUCTION STATIONS
+    </span>
+
+    <span id="clock">
+      00:00:00
+    </span>
+
+  </div>
+
+</div>
+
+
+<!-- =======================================================
+     FACTORY MAP
+======================================================== -->
+
+<div id="navigationPanel">
+
+  <div class="panelHeader">
+
+    <span>
+      FACTORY NAVIGATION
+    </span>
+
+    <span class="panelTag">
+      LIVE MAP
+    </span>
+
+  </div>
+
+
+  <div class="map">
+
+    <div class="mapRoad horizontal"></div>
+
+    <div class="mapRoad vertical"></div>
+
+
+    <div class="mapStation" id="mapM01">01</div>
+    <div class="mapStation" id="mapM02">02</div>
+    <div class="mapStation" id="mapM03">03</div>
+    <div class="mapStation" id="mapM04">04</div>
+    <div class="mapStation" id="mapM05">05</div>
+    <div class="mapStation" id="mapM06">06</div>
+
+    <div class="mapStation" id="mapM07">07</div>
+    <div class="mapStation" id="mapM08">08</div>
+    <div class="mapStation" id="mapM09">09</div>
+    <div class="mapStation" id="mapM10">10</div>
+    <div class="mapStation" id="mapM11">11</div>
+    <div class="mapStation" id="mapM12">12</div>
+
+    <div class="mapLabel">
+      PRODUCTION FLOOR
+    </div>
+
+  </div>
+
+
+  <div class="navigationHelp">
+
+    <b>W A S D</b> — เดินสำรวจโรงงาน<br>
+
+    <b>MOUSE</b> — มองรอบโรงงาน<br>
+
+    <b>SHIFT</b> — เดินเร็ว<br>
+
+    <b>SPACE</b> — กระโดด<br>
+
+    <b>CLICK</b> — เปิด Digital Twin<br>
+
+    <b>เข้าใกล้เครื่อง</b> — Auto Inspect
+
+  </div>
+
+</div>
+
+
+<!-- =======================================================
+     DIGITAL TWIN DASHBOARD
+======================================================== -->
+
+<div id="dashboard">
+
+  <div class="dashboardTop">
+
+    <div>
+
+      <div
+        id="machineCode"
+        class="machineCode">
+
+        M01 · DIGITAL TWIN
+
+      </div>
+
+
+      <h2 id="machineName">
+        Steel Body Stamping
+      </h2>
+
+
+      <div id="machineDescription">
+        PRECISION BODY PANEL FORMING
+      </div>
+
+    </div>
+
+
+    <div
+      id="statusBadge"
+      class="statusBadge statusNormal">
+
+      NORMAL
+
+    </div>
+
+  </div>
+
+
+  <div class="metrics">
+
+    <div class="metric">
+
+      <div class="metricLabel">
+        TEMPERATURE
+      </div>
+
+      <div
+        id="temperature"
+        class="metricValue">
+
+        -- °C
+
+      </div>
+
+    </div>
+
+
+    <div class="metric">
+
+      <div class="metricLabel">
+        VIBRATION
+      </div>
+
+      <div
+        id="vibration"
+        class="metricValue">
+
+        -- mm/s
+
+      </div>
+
+    </div>
+
+
+    <div class="metric">
+
+      <div class="metricLabel">
+        RPM
+      </div>
+
+      <div
+        id="rpm"
+        class="metricValue">
+
+        --
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="alarmBox">
+
+    <div class="alarmLabel">
+      ALARM EVENTS
+    </div>
+
+    <div
+      id="alarmCount"
+      class="alarmValue">
+
+      0
+
+    </div>
+
+  </div>
+
+
+  <div class="sectionTitle">
+    SENSOR TREND · LAST 20 SECONDS
+  </div>
+
+
+  <div class="trendRow">
+
+    <div class="trendName">
+      TEMP
+    </div>
+
+    <div
+      id="tempBars"
+      class="trendBars">
+    </div>
+
+  </div>
+
+
+  <div class="trendRow">
+
+    <div class="trendName">
+      VIB
+    </div>
+
+    <div
+      id="vibBars"
+      class="trendBars">
+    </div>
+
+  </div>
+
+
+  <div class="trendRow">
+
+    <div class="trendName">
+      RPM
+    </div>
+
+    <div
+      id="rpmBars"
+      class="trendBars">
+    </div>
+
+  </div>
+
+
+  <div class="sectionTitle">
+    INDUSTRIAL CONDITION MONITORING
+  </div>
+
+
+  <div
+    id="conditions"
+    class="conditions">
+  </div>
+
+</div>
+
+
+<!-- =======================================================
+     PROXIMITY
+======================================================== -->
+
+<div id="proximity">
+
+  <div id="proximityCode">
+    M01
+  </div>
+
+  <div id="proximityText">
+    Steel Body Stamping
+  </div>
+
+</div>
+
+
+<div id="crosshair"></div>
+
+
+<div id="bottomHelp">
+
+  <b>WASD</b> MOVE
+  &nbsp;·&nbsp;
+
+  <b>SHIFT</b> RUN
+  &nbsp;·&nbsp;
+
+  <b>SPACE</b> JUMP
+  &nbsp;·&nbsp;
+
+  <b>MOUSE</b> LOOK
+  &nbsp;·&nbsp;
+
+  <b>CLICK</b> INTERACT
+
+</div>
+
+
+<!-- =======================================================
+     A-FRAME SCENE
+======================================================== -->
+
+<a-scene
+
+  background="
+    color:#eaf6ff
+  "
+
+  renderer="
+    antialias:true;
+    colorManagement:true;
+    physicallyCorrectLights:true
+  "
+
+  fog="
+    type:linear;
+    color:#eaf6ff;
+    near:25;
+    far:60
+  "
+>
+
+
+<!-- =======================================================
+     BRIGHT LIGHTING
+======================================================== -->
+
+<a-entity
+  light="
+    type:ambient;
+    intensity:1.15;
+    color:#ffffff
+  ">
+</a-entity>
+
+
+<a-entity
+  light="
+    type:directional;
+    intensity:1.6;
+    color:#ffffff
+  "
+  position="5 15 10">
+</a-entity>
+
+
+<a-entity
+  light="
+    type:directional;
+    intensity:.7;
+    color:#dff6ff
+  "
+  position="-15 8 -8">
+</a-entity>
+
+
+<!-- =======================================================
+     FLOOR
+======================================================== -->
+
+<a-plane
+
+  position="0 0 0"
+
+  rotation="-90 0 0"
+
+  width="44"
+
+  height="30"
+
+  color="#e2e8f0"
+
+  material="
+    roughness:.65;
+    metalness:.1
+  "
+
+></a-plane>
+
+
+<!-- =======================================================
+     FLOOR GRID
+======================================================== -->
+
+<a-entity id="floorGrid"></a-entity>
+
+
+<!-- =======================================================
+     FLOOR BLUE LINES
+======================================================== -->
+
+<a-entity id="floorLines"></a-entity>
+
+
+<!-- =======================================================
+     WALLS
+======================================================== -->
+
+<a-box
+
+  position="0 4 -15"
+
+  width="44"
+
+  height="8"
+
+  depth=".3"
+
+  color="#dbeafe"
+
+></a-box>
+
+
+<a-box
+
+  position="-22 4 0"
+
+  width=".3"
+
+  height="8"
+
+  depth="30"
+
+  color="#dbeafe"
+
+></a-box>
+
+
+<a-box
+
+  position="22 4 0"
+
+  width=".3"
+
+  height="8"
+
+  depth="30"
+
+  color="#dbeafe"
+
+></a-box>
+
+
+<!-- =======================================================
+     LARGE WINDOWS
+======================================================== -->
+
+<a-box
+
+  position="0 5.2 -14.78"
+
+  width="34"
+
+  height="2.4"
+
+  depth=".04"
+
+  color="#bae6fd"
+
+  material="
+    opacity:.55;
+    transparent:true;
+    metalness:.4;
+    roughness:.1
+  "
+
+></a-box>
+
+
+<!-- window divisions -->
+
+<a-entity id="windowFrames"></a-entity>
+
+
+<!-- =======================================================
+     CEILING
+======================================================== -->
+
+<a-box
+
+  position="0 8 0"
+
+  width="44"
+
+  height=".15"
+
+  depth="30"
+
+  color="#f8fafc"
+
+></a-box>
+
+
+<!-- =======================================================
+     CEILING BEAMS
+======================================================== -->
+
+<a-entity id="ceilingBeams"></a-entity>
+
+
+<!-- =======================================================
+     LED LIGHTS
+======================================================== -->
+
+<a-entity id="ceilingLights"></a-entity>
+
+
+<!-- =======================================================
+     WALKWAYS
+======================================================== -->
+
+<a-entity id="walkways"></a-entity>
+
+
+<!-- =======================================================
+     FACTORY MACHINES
+======================================================== -->
+
+<a-entity id="factory"></a-entity>
+
+
+<!-- =======================================================
+     CONTROL ROOM
+======================================================== -->
+
+<a-entity>
+
+  <a-box
+
+    position="0 1.7 -13.3"
+
+    width="9"
+
+    height="3.2"
+
+    depth=".5"
+
+    color="#f8fafc"
+
+  ></a-box>
+
+
+  <a-box
+
+    position="0 3.2 -13"
+
+    width="8"
+
+    height="1.5"
+
+    depth=".08"
+
+    color="#e0f2fe"
+
+  ></a-box>
+
+
+  <a-text
+
+    value="FACTORY CONTROL CENTER"
+
+    align="center"
+
+    color="#0369a1"
+
+    width="7"
+
+    position="0 3.25 -12.9">
+
+  </a-text>
+
+
+  <a-text
+
+    value="DIGITAL TWIN / MES / SCADA / AI"
+
+    align="center"
+
+    color="#64748b"
+
+    width="5"
+
+    position="0 2.8 -12.9">
+
+  </a-text>
+
+
+  <a-box
+
+    position="-2 1.1 -12.8"
+
+    width="2.8"
+
+    height=".8"
+
+    depth=".7"
+
+    color="#cbd5e1">
+
+  </a-box>
+
+
+  <a-box
+
+    position="2 1.1 -12.8"
+
+    width="2.8"
+
+    height=".8"
+
+    depth=".7"
+
+    color="#cbd5e1">
+
+  </a-box>
+
+</a-entity>
+
+
+<!-- =======================================================
+     WAREHOUSE
+======================================================== -->
+
+<a-entity>
+
+  <a-text
+
+    value="PARTS WAREHOUSE"
+
+    align="center"
+
+    color="#0369a1"
+
+    width="5"
+
+    position="-17 2.8 5">
+
+  </a-text>
+
+
+  <a-box
+
+    position="-17 1.2 6"
+
+    width="6"
+
+    height="2.4"
+
+    depth="5"
+
+    color="#f8fafc">
+
+  </a-box>
+
+
+  <a-box
+
+    position="-19 1.6 3.5"
+
+    width=".15"
+
+    height="3"
+
+    depth="4"
+
+    color="#64748b">
+
+  </a-box>
+
+
+  <a-box
+
+    position="-17 1.6 3.5"
+
+    width=".15"
+
+    height="3"
+
+    depth="4"
+
+    color="#64748b">
+
+  </a-box>
+
+
+  <a-box
+
+    position="-15 1.6 3.5"
+
+    width=".15"
+
+    height="3"
+
+    depth="4"
+
+    color="#64748b">
+
+  </a-box>
+
+
+  <a-box
+
+    position="-18.4 1 3.5"
+
+    width="1"
+
+    height=".8"
+
+    depth=".7"
+
+    color="#f59e0b">
+
+  </a-box>
+
+
+  <a-box
+
+    position="-16.3 1 3.5"
+
+    width="1"
+
+    height=".8"
+
+    depth=".7"
+
+    color="#fbbf24">
+
+  </a-box>
+
+</a-entity>
+
+
+<!-- =======================================================
+     DISPATCH
+======================================================== -->
+
+<a-entity>
+
+  <a-text
+
+    value="LOGISTICS / DISPATCH"
+
+    align="center"
+
+    color="#0369a1"
+
+    width="6"
+
+    position="17 2.8 6">
+
+  </a-text>
+
+
+  <a-box
+
+    position="17 1 7"
+
+    width="6"
+
+    height="2"
+
+    depth="4"
+
+    color="#f8fafc">
+
+  </a-box>
+
+
+  <a-box
+
+    position="17 2.2 7"
+
+    width="4.5"
+
+    height=".08"
+
+    depth="3"
+
+    color="#38bdf8"
+
+    material="
+      opacity:.5;
+      transparent:true
+    ">
+
+  </a-box>
+
+</a-entity>
+
+
+<!-- =======================================================
+     MAIN FACTORY TITLE
+======================================================== -->
+
+<a-text
+
+  value="AUTOMOTIVE PRODUCTION FLOOR"
+
+  align="center"
+
+  color="#0284c7"
+
+  width="7"
+
+  position="0 6.2 -14.5">
+
+</a-text>
+
+
+<!-- =======================================================
+     PLAYER
+======================================================== -->
+
+<a-entity
+
+  id="player"
+
+  position="0 1.7 11"
+
+  movement-controller>
+
+  <a-camera
+
+    id="camera"
+
+    look-controls="
+      pointerLockEnabled:false
+    "
+
+    wasd-controls="
+      acceleration:20;
+      fly:false
+    "
+
+    cursor="
+      rayOrigin:mouse
+    ">
+
+  </a-camera>
+
+</a-entity>
+
+
+</a-scene>
+
+
+<script>
+
+/* =========================================================
+   MACHINE DEFINITIONS
+========================================================= */
+
+const machineDefinitions=[
+
+  {
+    id:"M01",
+    name:"Steel Body Stamping",
+    desc:"PRECISION BODY PANEL FORMING",
+    x:-15,
+    z:-8,
+    color:"#38bdf8"
+  },
+
+  {
+    id:"M02",
+    name:"Laser Cutting",
+    desc:"HIGH PRECISION LASER BODY CUTTING",
+    x:-9,
+    z:-8,
+    color:"#8b5cf6"
+  },
+
+  {
+    id:"M03",
+    name:"Robotic Welding",
+    desc:"MULTI-AXIS BODY FRAME WELDING",
+    x:-3,
+    z:-8,
+    color:"#f97316"
+  },
+
+  {
+    id:"M04",
+    name:"Paint Preparation",
+    desc:"SURFACE CLEANING & PREPARATION",
+    x:3,
+    z:-8,
+    color:"#06b6d4"
+  },
+
+  {
+    id:"M05",
+    name:"Automated Painting",
+    desc:"ROBOTIC PAINT APPLICATION",
+    x:9,
+    z:-8,
+    color:"#ec4899"
+  },
+
+  {
+    id:"M06",
+    name:"Paint Curing",
+    desc:"CONTROLLED PAINT CURING OVEN",
+    x:15,
+    z:-8,
+    color:"#eab308"
+  },
+
+  {
+    id:"M07",
+    name:"Engine Assembly",
+    desc:"POWERTRAIN ASSEMBLY CELL",
+    x:-15,
+    z:0,
+    color:"#f97316"
+  },
+
+  {
+    id:"M08",
+    name:"Battery Assembly",
+    desc:"HIGH VOLTAGE BATTERY MODULE",
+    x:-9,
+    z:0,
+    color:"#06b6d4"
+  },
+
+  {
+    id:"M09",
+    name:"Wheel Installation",
+    desc:"AUTOMATED WHEEL FITTING",
+    x:-3,
+    z:0,
+    color:"#3b82f6"
+  },
+
+  {
+    id:"M10",
+    name:"Glass Installation",
+    desc:"AUTOMATED WINDSHIELD INSTALLATION",
+    x:3,
+    z:0,
+    color:"#0ea5e9"
+  },
+
+  {
+    id:"M11",
+    name:"Final Inspection",
+    desc:"VISION AI QUALITY INSPECTION",
+    x:9,
+    z:0,
+    color:"#65a30d"
+  },
+
+  {
+    id:"M12",
+    name:"Vehicle Test & Dispatch",
+    desc:"FINAL VEHICLE TESTING",
+    x:15,
+    z:0,
+    color:"#16a34a"
+  }
+
+];
+
+
+const machines=[];
+
+let selectedMachine=null;
+
+
+/* =========================================================
+   STATUS FUNCTIONS
+========================================================= */
+
+function temperatureStatus(v){
+
+  if(v<60)
+    return "Normal";
+
+  if(v<75)
+    return "Warning";
+
+  return "Alarm";
+
+}
+
+
+function vibrationStatus(v){
+
+  if(v<4)
+    return "Normal";
+
+  if(v<6)
+    return "Warning";
+
+  return "Alarm";
+
+}
+
+
+function rpmStatus(v){
+
+  if(
+    v>=1000 &&
+    v<2400
+  )
+    return "Normal";
+
+
+  if(
+    (v>=700 && v<1000) ||
+    (v>=2400 && v<2800)
+  )
+    return "Warning";
+
+
+  return "Alarm";
+
+}
+
+
+function overallStatus(d){
+
+  const states=[
+
+    temperatureStatus(
+      d.temperature
+    ),
+
+    vibrationStatus(
+      d.vibration
+    ),
+
+    rpmStatus(
+      d.rpm
+    )
+
+  ];
+
+
+  if(states.includes("Alarm"))
+    return "Alarm";
+
+
+  if(states.includes("Warning"))
+    return "Warning";
+
+
+  return "Normal";
+
+}
+
+
+/* =========================================================
+   FLOOR GRID
+========================================================= */
+
+const floorGrid=
+  document.getElementById(
+    "floorGrid"
+  );
+
+
+for(let x=-21;x<=21;x++){
+
+  const line=
+    document.createElement(
+      "a-box"
+    );
+
+  line.setAttribute(
+    "position",
+    `${x}.01 0`
+  );
+
+  line.setAttribute(
+    "width",
+    ".012"
+  );
+
+  line.setAttribute(
+    "height",
+    ".008"
+  );
+
+  line.setAttribute(
+    "depth",
+    "30"
+  );
+
+  line.setAttribute(
+    "color",
+    "#94a3b8"
+  );
+
+  line.setAttribute(
+    "material",
+    "opacity:.22;transparent:true"
+  );
+
+  floorGrid.appendChild(
+    line
+  );
+
+}
+
+
+for(let z=-14;z<=14;z++){
+
+  const line=
+    document.createElement(
+      "a-box"
+    );
+
+  line.setAttribute(
+    "position",
+    `0 .012 ${z}`
+  );
+
+  line.setAttribute(
+    "width",
+    "44"
+  );
+
+  line.setAttribute(
+    "height",
+    ".008"
+  );
+
+  line.setAttribute(
+    "depth",
+    ".012"
+  );
+
+  line.setAttribute(
+    "color",
+    "#94a3b8"
+  );
+
+  line.setAttribute(
+    "material",
+    "opacity:.22;transparent:true"
+  );
+
+  floorGrid.appendChild(
+    line
+  );
+
+}
+
+
+/* =========================================================
+   BLUE FLOOR LANES
+========================================================= */
+
+const floorLines=
+  document.getElementById(
+    "floorLines"
+  );
+
+
+function floorLine(
+  x,
+  z,
+  w,
+  d
+){
+
+  const line=
+    document.createElement(
+      "a-box"
+    );
+
+
+  line.setAttribute(
+    "position",
+    `${x}.025 ${z}`
+  );
+
+
+  line.setAttribute(
+    "width",
+    w
+  );
+
+
+  line.setAttribute(
+    "height",
+    ".025"
+  );
+
+
+  line.setAttribute(
+    "depth",
+    d
+  );
+
+
+  line.setAttribute(
+    "color",
+    "#38bdf8"
+  );
+
+
+  line.setAttribute(
+    "material",
+    "opacity:.65;transparent:true"
+  );
+
+
+  floorLines.appendChild(
+    line
+  );
+
+}
+
+
+floorLine(
+  0,
+  -3.7,
+  40,
+  .08
+);
+
+
+floorLine(
+  0,
+  3.7,
+  40,
+  .08
+);
+
+
+floorLine(
+  -20,
+  2,
+  .08,
+  12
+);
+
+
+floorLine(
+  20,
+  2,
+  .08,
+  12
+);
+
+
+/* =========================================================
+   WINDOW FRAMES
+========================================================= */
+
+const windowFrames=
+  document.getElementById(
+    "windowFrames"
+  );
+
+
+for(let x=-17;x<=17;x+=4){
+
+  const frame=
+    document.createElement(
+      "a-box"
+    );
+
+
+  frame.setAttribute(
+    "position",
+    `${x} 5.2 -14.72`
+  );
+
+
+  frame.setAttribute(
+    "width",
+    ".08"
+  );
+
+
+  frame.setAttribute(
+    "height",
+    "2.5"
+  );
+
+
+  frame.setAttribute(
+    "depth",
+    ".08"
+  );
+
+
+  frame.setAttribute(
+    "color",
+    "#64748b"
+  );
+
+
+  windowFrames.appendChild(
+    frame
+  );
+
+}
+
+
+/* =========================================================
+   CEILING BEAMS
+========================================================= */
+
+const ceilingBeams=
+  document.getElementById(
+    "ceilingBeams"
+  );
+
+
+for(let x=-18;x<=18;x+=6){
+
+  const beam=
+    document.createElement(
+      "a-box"
+    );
+
+
+  beam.setAttribute(
+    "position",
+    `${x} 7.65 0`
+  );
+
+
+  beam.setAttribute(
+    "width",
+    ".2"
+  );
+
+
+  beam.setAttribute(
+    "height",
+    ".25"
+  );
+
+
+  beam.setAttribute(
+    "depth",
+    "30"
+  );
+
+
+  beam.setAttribute(
+    "color",
+    "#cbd5e1"
+  );
+
+
+  ceilingBeams.appendChild(
+    beam
+  );
+
+}
+
+
+/* =========================================================
+   BRIGHT LED LIGHTS
+========================================================= */
+
+const ceilingLights=
+  document.getElementById(
+    "ceilingLights"
+  );
+
+
+for(let x=-18;x<=18;x+=6){
+
+  for(let z=-10;z<=10;z+=10){
+
+    const lamp=
+      document.createElement(
+        "a-box"
+      );
+
+
+    lamp.setAttribute(
+      "position",
+      `${x} 7.4 ${z}`
+    );
+
+
+    lamp.setAttribute(
+      "width",
+      "4"
+    );
+
+
+    lamp.setAttribute(
+      "height",
+      ".1"
+    );
+
+
+    lamp.setAttribute(
+      "depth",
+      ".3"
+    );
+
+
+    lamp.setAttribute(
+      "color",
+      "#ffffff"
+    );
+
+
+    lamp.setAttribute(
+      "material",
+      "emissive:#ffffff;emissiveIntensity:.7"
+    );
+
+
+    lamp.setAttribute(
+      "light",
+      "type:point;intensity:.55;distance:11;color:#ffffff"
+    );
+
+
+    ceilingLights.appendChild(
+      lamp
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   WALKWAYS
+========================================================= */
+
+const walkways=
+  document.getElementById(
+    "walkways"
+  );
+
+
+function addWalkway(
+  x,
+  z,
+  width,
+  depth
+){
+
+  const walkway=
+    document.createElement(
+      "a-box"
+    );
+
+
+  walkway.setAttribute(
+    "position",
+    `${x} .02 ${z}`
+  );
+
+
+  walkway.setAttribute(
+    "width",
+    width
+  );
+
+
+  walkway.setAttribute(
+    "height",
+    ".02"
+  );
+
+
+  walkway.setAttribute(
+    "depth",
+    depth
+  );
+
+
+  walkway.setAttribute(
+    "color",
+    "#f8fafc"
+  );
+
+
+  walkway.setAttribute(
+    "material",
+    "opacity:.7;transparent:true"
+  );
+
+
+  walkways.appendChild(
+    walkway
+  );
+
+}
+
+
+addWalkway(
+  0,
+  5,
+  40,
+  2
+);
+
+
+addWalkway(
+  0,
+  -3.7,
+  40,
+  1.6
+);
+
+
+/* =========================================================
+   MACHINE CREATOR
+========================================================= */
+
+function createMachine(
+  def,
+  index
+){
+
+  const entity=
+    document.createElement(
+      "a-entity"
+    );
+
+
+  entity.setAttribute(
+    "id",
+    def.id
+  );
+
+
+  entity.setAttribute(
+    "position",
+    `${def.x} 0 ${def.z}`
+  );
+
+
+  entity.classList.add(
+    "factoryMachine"
+  );
+
+
+  /* -------------------------------------------------------
+     PLATFORM
+  ------------------------------------------------------- */
+
+  const platform=
+    document.createElement(
+      "a-box"
+    );
+
+
+  platform.setAttribute(
+    "position",
+    "0 .08 0"
+  );
+
+
+  platform.setAttribute(
+    "width",
+    "4.7"
+  );
+
+
+  platform.setAttribute(
+    "height",
+    ".15"
+  );
+
+
+  platform.setAttribute(
+    "depth",
+    "3.7"
+  );
+
+
+  platform.setAttribute(
+    "color",
+    "#cbd5e1"
+  );
+
+
+  platform.setAttribute(
+    "material",
+    "metalness:.5;roughness:.35"
+  );
+
+
+  entity.appendChild(
+    platform
+  );
+
+
+  /* -------------------------------------------------------
+     MACHINE BODY
+  ------------------------------------------------------- */
+
+  const body=
+    document.createElement(
+      "a-box"
+    );
+
+
+  body.setAttribute(
+    "position",
+    "0 .85 0"
+  );
+
+
+  body.setAttribute(
+    "width",
+    "4"
+  );
+
+
+  body.setAttribute(
+    "height",
+    "1.55"
+  );
+
+
+  body.setAttribute(
+    "depth",
+    "2.7"
+  );
+
+
+  body.setAttribute(
+    "color",
+    "#f8fafc"
+  );
+
+
+  body.setAttribute(
+    "material",
+    "metalness:.65;roughness:.28"
+  );
+
+
+  entity.appendChild(
+    body
+  );
+
+
+  /* -------------------------------------------------------
+     BLUE MACHINE SIDE STRIPE
+  ------------------------------------------------------- */
+
+  const stripe=
+    document.createElement(
+      "a-box"
+    );
+
+
+  stripe.setAttribute(
+    "position",
+    "0 1.35 1.38"
+  );
+
+
+  stripe.setAttribute(
+    "width",
+    "3.5"
+  );
+
+
+  stripe.setAttribute(
+    "height",
+    ".1"
+  );
+
+
+  stripe.setAttribute(
+    "depth",
+    ".05"
+  );
+
+
+  stripe.setAttribute(
+    "color",
+    def.color
+  );
+
+
+  stripe.setAttribute(
+    "material",
+    `emissive:${def.color};emissiveIntensity:.35`
+  );
+
+
+  entity.appendChild(
+    stripe
+  );
+
+
+  /* -------------------------------------------------------
+     FRONT SCREEN
+  ------------------------------------------------------- */
+
+  const screen=
+    document.createElement(
+      "a-box"
+    );
+
+
+  screen.setAttribute(
+    "position",
+    "0 1.55 1.4"
+  );
+
+
+  screen.setAttribute(
+    "width",
+    "1.8"
+  );
+
+
+  screen.setAttribute(
+    "height",
+    ".65"
+  );
+
+
+  screen.setAttribute(
+    "depth",
+    ".06"
+  );
+
+
+  screen.setAttribute(
+    "color",
+    "#e0f2fe"
+  );
+
+
+  screen.setAttribute(
+    "material",
+    `emissive:${def.color};emissiveIntensity:.12`
+  );
+
+
+  entity.appendChild(
+    screen
+  );
+
+
+  const screenText=
+    document.createElement(
+      "a-text"
+    );
+
+
+  screenText.setAttribute(
+    "value",
+    `${def.id}  ONLINE\nDIGITAL TWIN`
+  );
+
+
+  screenText.setAttribute(
+    "align",
+    "center"
+  );
+
+
+  screenText.setAttribute(
+    "color",
+    "#0369a1"
+  );
+
+
+  screenText.setAttribute(
+    "width",
+    "1.45"
+  );
+
+
+  screenText.setAttribute(
+    "position",
+    "0 1.55 1.45"
+  );
+
+
+  entity.appendChild(
+    screenText
+  );
+
+
+  /* -------------------------------------------------------
+     TOP
+  ------------------------------------------------------- */
+
+  const top=
+    document.createElement(
+      "a-box"
+    );
+
+
+  top.setAttribute(
+    "position",
+    "0 1.8 0"
+  );
+
+
+  top.setAttribute(
+    "width",
+    "3.5"
+  );
+
+
+  top.setAttribute(
+    "height",
+    ".5"
+  );
+
+
+  top.setAttribute(
+    "depth",
+    "2.2"
+  );
+
+
+  top.setAttribute(
+    "color",
+    "#e2e8f0"
+  );
+
+
+  entity.appendChild(
+    top
+  );
+
+
+  /* -------------------------------------------------------
+     STATUS TOWER
+  ------------------------------------------------------- */
+
+  const tower=
+    document.createElement(
+      "a-entity"
+    );
+
+
+  tower.setAttribute(
+    "position",
+    "1.35 2.2 .2"
+  );
+
+
+  const pole=
+    document.createElement(
+      "a-cylinder"
+    );
+
+
+  pole.setAttribute(
+    "radius",
+    ".045"
+  );
+
+
+  pole.setAttribute(
+    "height",
+    ".7"
+  );
+
+
+  pole.setAttribute(
+    "color",
+    "#64748b"
+  );
+
+
+  tower.appendChild(
+    pole
+  );
+
+
+  const beacon=
+    document.createElement(
+      "a-sphere"
+    );
+
+
+  beacon.setAttribute(
+    "radius",
+    ".13"
+  );
+
+
+  beacon.setAttribute(
+    "position",
+    "0 .38 0"
+  );
+
+
+  beacon.setAttribute(
+    "color",
+    "#22c55e"
+  );
+
+
+  beacon.setAttribute(
+    "material",
+    "emissive:#22c55e;emissiveIntensity:.7"
+  );
+
+
+  tower.appendChild(
+    beacon
+  );
+
+
+  entity.appendChild(
+    tower
+  );
+
+
+  /* -------------------------------------------------------
+     LABEL
+  ------------------------------------------------------- */
+
+  const label=
+    document.createElement(
+      "a-text"
+    );
+
+
+  label.setAttribute(
+    "value",
+    `${def.id}\n${def.name}`
+  );
+
+
+  label.setAttribute(
+    "align",
+    "center"
+  );
+
+
+  label.setAttribute(
+    "color",
+    "#0369a1"
+  );
+
+
+  label.setAttribute(
+    "width",
+    "4"
+  );
+
+
+  label.setAttribute(
+    "position",
+    "0 2.75 0"
+  );
+
+
+  entity.appendChild(
+    label
+  );
+
+
+  /* -------------------------------------------------------
+     SAFETY POSTS
+  ------------------------------------------------------- */
+
+  const posts=[
+
+    [-2.1,1.1,-1.45],
+    [2.1,1.1,-1.45],
+    [-2.1,1.1,1.45],
+    [2.1,1.1,1.45]
+
+  ];
+
+
+  posts.forEach(
+    p=>{
+
+      const post=
+        document.createElement(
+          "a-cylinder"
+        );
+
+
+      post.setAttribute(
+        "position",
+        `${p[0]} ${p[1]} ${p[2]}`
+      );
+
+
+      post.setAttribute(
+        "radius",
+        ".045"
+      );
+
+
+      post.setAttribute(
+        "height",
+        "2.2"
+      );
+
+
+      post.setAttribute(
+        "color",
+        "#facc15"
+      );
+
+
+      entity.appendChild(
+        post
+      );
+
+    }
+  );
+
+
+  /* -------------------------------------------------------
+     SAFETY PANEL
+  ------------------------------------------------------- */
+
+  const safetyPanel=
+    document.createElement(
+      "a-box"
+    );
+
+
+  safetyPanel.setAttribute(
+    "position",
+    "0 1.1 -1.45"
+  );
+
+
+  safetyPanel.setAttribute(
+    "width",
+    "4.1"
+  );
+
+
+  safetyPanel.setAttribute(
+    "height",
+    "2"
+  );
+
+
+  safetyPanel.setAttribute(
+    "depth",
+    ".025"
+  );
+
+
+  safetyPanel.setAttribute(
+    "color",
+    "#bae6fd"
+  );
+
+
+  safetyPanel.setAttribute(
+    "material",
+    "opacity:.22;transparent:true;metalness:.2;roughness:.1"
+  );
+
+
+  entity.appendChild(
+    safetyPanel
+  );
+
+
+  /* -------------------------------------------------------
+     CONVEYOR
+  ------------------------------------------------------- */
+
+  const conveyor=
+    document.createElement(
+      "a-box"
+    );
+
+
+  conveyor.setAttribute(
+    "position",
+    "0 .27 1.85"
+  );
+
+
+  conveyor.setAttribute(
+    "width",
+    "4"
+  );
+
+
+  conveyor.setAttribute(
+    "height",
+    ".22"
+  );
+
+
+  conveyor.setAttribute(
+    "depth",
+    ".8"
+  );
+
+
+  conveyor.setAttribute(
+    "color",
+    "#475569"
+  );
+
+
+  entity.appendChild(
+    conveyor
+  );
+
+
+  /* -------------------------------------------------------
+     ROLLERS
+  ------------------------------------------------------- */
+
+  for(
+    let r=-1.5;
+    r<=1.5;
+    r+=.5
+  ){
+
+    const roller=
+      document.createElement(
+        "a-cylinder"
+      );
+
+
+    roller.setAttribute(
+      "position",
+      `${r} .38 1.85`
+    );
+
+
+    roller.setAttribute(
+      "radius",
+      ".14"
+    );
+
+
+    roller.setAttribute(
+      "height",
+      ".72"
+    );
+
+
+    roller.setAttribute(
+      "rotation",
+      "90 0 0"
+    );
+
+
+    roller.setAttribute(
+      "color",
+      "#94a3b8"
+    );
+
+
+    roller.setAttribute(
+      "animation",
+      "property:rotation;from:90 0 0;to:90 360 0;loop:true;dur:700;easing:linear"
+    );
+
+
+    entity.appendChild(
+      roller
+    );
+
+  }
+
+
+  /* -------------------------------------------------------
+     CAR CHASSIS
+  ------------------------------------------------------- */
+
+  const chassis=
+    document.createElement(
+      "a-box"
+    );
+
+
+  chassis.setAttribute(
+    "position",
+    "-1.5 .52 1.85"
+  );
+
+
+  chassis.setAttribute(
+    "width",
+    "1.7"
+  );
+
+
+  chassis.setAttribute(
+    "height",
+    ".18"
+  );
+
+
+  chassis.setAttribute(
+    "depth",
+    ".9"
+  );
+
+
+  chassis.setAttribute(
+    "color",
+    "#94a3b8"
+  );
+
+
+  chassis.setAttribute(
+    "animation",
+    "property:position;from:-1.5 .52 1.85;to:1.5 .52 1.85;loop:true;dur:3600;easing:linear"
+  );
+
+
+  entity.appendChild(
+    chassis
+  );
+
+
+  const cabin=
+    document.createElement(
+      "a-box"
+    );
+
+
+  cabin.setAttribute(
+    "position",
+    "-1.5 .78 1.85"
+  );
+
+
+  cabin.setAttribute(
+    "width",
+    ".9"
+  );
+
+
+  cabin.setAttribute(
+    "height",
+    ".42"
+  );
+
+
+  cabin.setAttribute(
+    "depth",
+    ".72"
+  );
+
+
+  cabin.setAttribute(
+    "color",
+    "#dbeafe"
+  );
+
+
+  cabin.setAttribute(
+    "material",
+    "metalness:.7;roughness:.2"
+  );
+
+
+  cabin.setAttribute(
+    "animation",
+    "property:position;from:-1.5 .78 1.85;to:1.5 .78 1.85;loop:true;dur:3600;easing:linear"
+  );
+
+
+  entity.appendChild(
+    cabin
+  );
+
+
+  /* -------------------------------------------------------
+     ROBOT
+  ------------------------------------------------------- */
+
+  const robot=
+    document.createElement(
+      "a-entity"
+    );
+
+
+  robot.setAttribute(
+    "position",
+    "0 .75 -.45"
+  );
+
+
+  const robotBase=
+    document.createElement(
+      "a-cylinder"
+    );
+
+
+  robotBase.setAttribute(
+    "radius",
+    ".34"
+  );
+
+
+  robotBase.setAttribute(
+    "height",
+    ".35"
+  );
+
+
+  robotBase.setAttribute(
+    "color",
+    "#f97316"
+  );
+
+
+  entity.appendChild(
+    robotBase
+  );
+
+
+  const arm1=
+    document.createElement(
+      "a-box"
+    );
+
+
+  arm1.setAttribute(
+    "position",
+    "0 1.25 -.45"
+  );
+
+
+  arm1.setAttribute(
+    "width",
+    ".22"
+  );
+
+
+  arm1.setAttribute(
+    "height",
+    "1.1"
+  );
+
+
+  arm1.setAttribute(
+    "depth",
+    ".22"
+  );
+
+
+  arm1.setAttribute(
+    "color",
+    "#fb923c"
+  );
+
+
+  arm1.setAttribute(
+    "animation",
+    "property:rotation;from:-35 0 0;to:35 0 0;direction:alternate;loop:true;dur:1600;easing:easeInOutSine"
+  );
+
+
+  entity.appendChild(
+    arm1
+  );
+
+
+  const joint=
+    document.createElement(
+      "a-sphere"
+    );
+
+
+  joint.setAttribute(
+    "position",
+    "0 1.78 -.45"
+  );
+
+
+  joint.setAttribute(
+    "radius",
+    ".22"
+  );
+
+
+  joint.setAttribute(
+    "color",
+    "#ea580c"
+  );
+
+
+  entity.appendChild(
+    joint
+  );
+
+
+  const arm2=
+    document.createElement(
+      "a-box"
+    );
+
+
+  arm2.setAttribute(
+    "position",
+    ".43 2.05 -.45"
+  );
+
+
+  arm2.setAttribute(
+    "width",
+    ".85"
+  );
+
+
+  arm2.setAttribute(
+    "height",
+    ".18"
+  );
+
+
+  arm2.setAttribute(
+    "depth",
+    ".18"
+  );
+
+
+  arm2.setAttribute(
+    "color",
+    "#fb923c"
+  );
+
+
+  arm2.setAttribute(
+    "animation",
+    "property:rotation;from:0 0 -30;to:0 0 30;direction:alternate;loop:true;dur:1200"
+  );
+
+
+  entity.appendChild(
+    arm2
+  );
+
+
+  const gripper=
+    document.createElement(
+      "a-box"
+    );
+
+
+  gripper.setAttribute(
+    "position",
+    ".87 2.05 -.45"
+  );
+
+
+  gripper.setAttribute(
+    "width",
+    ".25"
+  );
+
+
+  gripper.setAttribute(
+    "height",
+    ".38"
+  );
+
+
+  gripper.setAttribute(
+    "depth",
+    ".25"
+  );
+
+
+  gripper.setAttribute(
+    "color",
+    "#cbd5e1"
+  );
+
+
+  entity.appendChild(
+    gripper
+  );
+
+
+  /* -------------------------------------------------------
+     DATA
+  ------------------------------------------------------- */
+
+  const data={
+
+    id:def.id,
+
+    name:def.name,
+
+    desc:def.desc,
+
+    temperature:
+      42+Math.random()*13,
+
+    vibration:
+      1.2+Math.random()*1.6,
+
+    rpm:
+      1200+Math.random()*650,
+
+    alarmCount:0,
+
+    previousStatus:"Normal",
+
+    tempHistory:[],
+
+    vibHistory:[],
+
+    rpmHistory:[],
+
+    cycle:0
+
+  };
+
+
+  for(let i=0;i<20;i++){
+
+    data.tempHistory.push(
+      data.temperature
+    );
+
+    data.vibHistory.push(
+      data.vibration
+    );
+
+    data.rpmHistory.push(
+      data.rpm
+    );
+
+  }
+
+
+  entity.addEventListener(
+    "click",
+    ()=>{
+
+      selectedMachine=
+        data;
+
+      updateDashboard();
+
+      highlightMap(
+        data.id
+      );
+
+    }
+  );
+
+
+  machines.push({
+
+    entity,
+
+    data,
+
+    beacon,
+
+    label
+
+  });
+
+
+  document
+    .getElementById("factory")
+    .appendChild(
+      entity
+    );
+
+}
+
+
+machineDefinitions.forEach(
+  createMachine
+);
+
+
+/* =========================================================
+   MAP CLICK
+========================================================= */
+
+machines.forEach(
+  machine=>{
+
+    const map=
+      document.getElementById(
+        "map"+machine.data.id
+      );
+
+
+    if(!map)
+      return;
+
+
+    map.addEventListener(
+      "click",
+      ()=>{
+
+        selectedMachine=
+          machine.data;
+
+        updateDashboard();
+
+        highlightMap(
+          machine.data.id
+        );
+
+        movePlayerNear(
+          machine.data.id
+        );
+
+      }
+    );
+
+  }
+);
+
+
+function highlightMap(id){
+
+  document
+    .querySelectorAll(
+      ".mapStation"
+    )
+    .forEach(
+      el=>
+        el.classList.remove(
+          "active"
+        )
+    );
+
+
+  const target=
+    document.getElementById(
+      "map"+id
+    );
+
+
+  if(target)
+    target.classList.add(
+      "active"
+    );
+
+}
+
+
+/* =========================================================
+   SIMULATION
+========================================================= */
+
+function randomWalk(
+  value,
+  amount
+){
+
+  return value+
+    (Math.random()-.5)*amount;
+
+}
+
+
+function simulateMachine(
+  machine
+){
+
+  const d=
+    machine.data;
+
+
+  d.cycle++;
+
+
+  d.temperature=
+    randomWalk(
+      d.temperature,
+      4.5
+    );
+
+
+  d.vibration=
+    randomWalk(
+      d.vibration,
+      .65
+    );
+
+
+  d.rpm=
+    randomWalk(
+      d.rpm,
+      150
+    );
+
+
+  d.temperature=
+    Math.max(
+      35,
+      Math.min(
+        90,
+        d.temperature
+      )
+    );
+
+
+  d.vibration=
+    Math.max(
+      1,
+      Math.min(
+        8,
+        d.vibration
+      )
+    );
+
+
+  d.rpm=
+    Math.max(
+      500,
+      Math.min(
+        3000,
+        d.rpm
+      )
+    );
+
+
+  if(Math.random()<.018){
+
+    d.temperature=
+      76+
+      Math.random()*9;
+
+  }
+
+
+  if(Math.random()<.018){
+
+    d.vibration=
+      6+
+      Math.random()*1.5;
+
+  }
+
+
+  if(Math.random()<.018){
+
+    d.rpm=
+      Math.random()<.5
+
+      ?550+
+       Math.random()*120
+
+      :2800+
+       Math.random()*140;
+
+  }
+
+
+  const status=
+    overallStatus(d);
+
+
+  if(
+    status==="Alarm" &&
+    d.previousStatus!=="Alarm"
+  ){
+
+    d.alarmCount++;
+
+  }
+
+
+  d.previousStatus=
+    status;
+
+
+  d.tempHistory.push(
+    d.temperature
+  );
+
+
+  d.vibHistory.push(
+    d.vibration
+  );
+
+
+  d.rpmHistory.push(
+    d.rpm
+  );
+
+
+  if(
+    d.tempHistory.length>20
+  )
+    d.tempHistory.shift();
+
+
+  if(
+    d.vibHistory.length>20
+  )
+    d.vibHistory.shift();
+
+
+  if(
+    d.rpmHistory.length>20
+  )
+    d.rpmHistory.shift();
+
+
+  updateMachineVisual(
+    machine,
+    status
+  );
+
+}
+
+
+/* =========================================================
+   STATUS VISUAL
+========================================================= */
+
+function updateMachineVisual(
+  machine,
+  status
+){
+
+  const colors={
+
+    Normal:"#22c55e",
+
+    Warning:"#facc15",
+
+    Alarm:"#ef4444"
+
+  };
+
+
+  machine.beacon.setAttribute(
+    "color",
+    colors[status]
+  );
+
+
+  machine.beacon.setAttribute(
+    "material",
+    `emissive:${colors[status]};emissiveIntensity:.8`
+  );
+
+
+  if(status==="Alarm"){
+
+    machine.beacon.setAttribute(
+      "animation",
+      "property:scale;from:1 1 1;to:1.7 1.7 1.7;direction:alternate;loop:true;dur:250"
+    );
+
+  }else{
+
+    machine.beacon.removeAttribute(
+      "animation"
+    );
+
+    machine.beacon.setAttribute(
+      "scale",
+      "1 1 1"
+    );
+
+  }
+
+
+  const map=
+    document.getElementById(
+      "map"+machine.data.id
+    );
+
+
+  if(map){
+
+    map.classList.remove(
+      "alarm"
+    );
+
+
+    if(status==="Alarm")
+      map.classList.add(
+        "alarm"
+      );
+
+  }
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function updateDashboard(){
+
+  if(!selectedMachine)
+    return;
+
+
+  const d=
+    selectedMachine;
+
+
+  const status=
+    overallStatus(d);
+
+
+  document.getElementById(
+    "machineCode"
+  ).textContent=
+    `${d.id} · DIGITAL TWIN`;
+
+
+  document.getElementById(
+    "machineName"
+  ).textContent=
+    d.name;
+
+
+  document.getElementById(
+    "machineDescription"
+  ).textContent=
+    d.desc;
+
+
+  document.getElementById(
+    "temperature"
+  ).textContent=
+    `${d.temperature.toFixed(1)} °C`;
+
+
+  document.getElementById(
+    "vibration"
+  ).textContent=
+    `${d.vibration.toFixed(2)} mm/s`;
+
+
+  document.getElementById(
+    "rpm"
+  ).textContent=
+    Math.round(d.rpm);
+
+
+  document.getElementById(
+    "alarmCount"
+  ).textContent=
+    d.alarmCount;
+
+
+  const badge=
+    document.getElementById(
+      "statusBadge"
+    );
+
+
+  badge.textContent=
+    status.toUpperCase();
+
+
+  badge.className=
+    "statusBadge "+
+    (
+      status==="Normal"
+      ?"statusNormal"
+      :
+      status==="Warning"
+      ?"statusWarning"
+      :
+      "statusAlarm"
+    );
+
+
+  renderTrend(
+    "tempBars",
+    d.tempHistory,
+    30,
+    90,
+    value=>{
+
+      if(value>=75)
+        return "#ef4444";
+
+      if(value>=60)
+        return "#facc15";
+
+      return "#22c55e";
+
+    }
+  );
+
+
+  renderTrend(
+    "vibBars",
+    d.vibHistory,
+    0,
+    8,
+    value=>{
+
+      if(value>=6)
+        return "#ef4444";
+
+      if(value>=4)
+        return "#facc15";
+
+      return "#22c55e";
+
+    }
+  );
+
+
+  renderTrend(
+    "rpmBars",
+    d.rpmHistory,
+    500,
+    3000,
+    value=>{
+
+      if(
+        value<700 ||
+        value>=2800
+      )
+        return "#ef4444";
+
+
+      if(
+        (value>=700 && value<1000) ||
+        (value>=2400 && value<2800)
+      )
+        return "#facc15";
+
+
+      return "#22c55e";
+
+    }
+  );
+
+
+  updateConditions(d);
+
+}
+
+
+/* =========================================================
+   TREND
+========================================================= */
+
+function renderTrend(
+  id,
+  history,
+  min,
+  max,
+  color
+){
+
+  const container=
+    document.getElementById(
+      id
+    );
+
+
+  container.innerHTML="";
+
+
+  history.forEach(
+    value=>{
+
+      const bar=
+        document.createElement(
+          "div"
+        );
+
+
+      bar.className=
+        "trendBar";
+
+
+      let percent=
+        (
+          (value-min)/
+          (max-min)
+        )*100;
+
+
+      percent=
+        Math.max(
+          5,
+          Math.min(
+            100,
+            percent
+          )
+        );
+
+
+      bar.style.height=
+        percent+"%";
+
+
+      bar.style.background=
+        color(value);
+
+
+      bar.style.boxShadow=
+        `0 0 5px ${color(value)}`;
+
+
+      container.appendChild(
+        bar
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   20 CONDITIONS
+========================================================= */
+
+function updateConditions(d){
+
+  const status=
+    overallStatus(d);
+
+
+  const conditions=[
+
+    [
+      "Temperature Sensor",
+      temperatureStatus(
+        d.temperature
+      )
+    ],
+
+    [
+      "Vibration Sensor",
+      vibrationStatus(
+        d.vibration
+      )
+    ],
+
+    [
+      "RPM Sensor",
+      rpmStatus(
+        d.rpm
+      )
+    ],
+
+    [
+      "Machine Online",
+      "Normal"
+    ],
+
+    [
+      "Conveyor Running",
+      "Normal"
+    ],
+
+    [
+      "Robot Arm Motion",
+      "Normal"
+    ],
+
+    [
+      "Workpiece Detection",
+      "Normal"
+    ],
+
+    [
+      "Production Cycle",
+      "Normal"
+    ],
+
+    [
+      "Motor Load",
+      d.temperature>=70
+      ?"Warning"
+      :"Normal"
+    ],
+
+    [
+      "Cooling System",
+      d.temperature>=75
+      ?"Warning"
+      :"Normal"
+    ],
+
+    [
+      "Safety Gate",
+      "Normal"
+    ],
+
+    [
+      "Emergency Stop",
+      "Normal"
+    ],
+
+    [
+      "Lubrication",
+      d.cycle%31===0
+      ?"Warning"
+      :"Normal"
+    ],
+
+    [
+      "Power Supply",
+      "Normal"
+    ],
+
+    [
+      "Compressed Air",
+      d.vibration>=6
+      ?"Warning"
+      :"Normal"
+    ],
+
+    [
+      "Sensor Communication",
+      "Normal"
+    ],
+
+    [
+      "Conveyor Speed",
+      rpmStatus(
+        d.rpm
+      )
+    ],
+
+    [
+      "Robot Position",
+      "Normal"
+    ],
+
+    [
+      "Quality Inspection",
+      status==="Alarm"
+      ?"Warning"
+      :"Normal"
+    ],
+
+    [
+      "Overall Machine Health",
+      status
+    ]
+
+  ];
+
+
+  document.getElementById(
+    "conditions"
+  ).innerHTML=
+
+    conditions.map(
+      (item,index)=>{
+
+        const state=
+          item[1];
+
+
+        let cls=
+          "conditionNormal";
+
+
+        if(state==="Warning")
+          cls=
+            "conditionWarning";
+
+
+        if(state==="Alarm")
+          cls=
+            "conditionAlarm";
+
+
+        return `
+
+          <div class="condition">
+
+            <div class="conditionName">
+
+              ${String(
+                index+1
+              ).padStart(2,"0")}
+
+              · ${item[0]}
+
+            </div>
+
+
+            <div
+              class="conditionStatus ${cls}">
+
+              ${state}
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
+
+}
+
+
+/* =========================================================
+   PROXIMITY
+========================================================= */
+
+function distance(
+  a,
+  b
+){
+
+  const dx=
+    a.x-b.x;
+
+
+  const dz=
+    a.z-b.z;
+
+
+  return Math.sqrt(
+    dx*dx+
+    dz*dz
+  );
+
+}
+
+
+function updateProximity(){
+
+  const player=
+    document.getElementById(
+      "player"
+    );
+
+
+  if(!player)
+    return;
+
+
+  const pos=
+    player.object3D.position;
+
+
+  let nearest=null;
+
+  let nearestDistance=
+    Infinity;
+
+
+  machines.forEach(
+    machine=>{
+
+      const p=
+        machine.entity
+        .object3D
+        .position;
+
+
+      const d=
+        distance(
+          {
+            x:pos.x,
+            z:pos.z
+          },
+          {
+            x:p.x,
+            z:p.z
+          }
+        );
+
+
+      if(
+        d<nearestDistance
+      ){
+
+        nearestDistance=d;
+
+        nearest=machine;
+
+      }
+
+    }
+  );
+
+
+  const panel=
+    document.getElementById(
+      "proximity"
+    );
+
+
+  if(
+    nearest &&
+    nearestDistance<5.5
+  ){
+
+    panel.classList.add(
+      "visible"
+    );
+
+
+    document.getElementById(
+      "proximityCode"
+    ).textContent=
+
+      `${nearest.data.id} · ${nearestDistance.toFixed(1)} M`;
+
+
+    document.getElementById(
+      "proximityText"
+    ).textContent=
+
+      `${nearest.data.name} · CLICK TO INSPECT`;
+
+
+    if(
+      selectedMachine!==
+      nearest.data
+    ){
+
+      selectedMachine=
+        nearest.data;
+
+      updateDashboard();
+
+      highlightMap(
+        nearest.data.id
+      );
+
+    }
+
+  }else{
+
+    panel.classList.remove(
+      "visible"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+AFRAME.registerComponent(
+  "movement-controller",
+  {
+
+    init:function(){
+
+      this.keys={};
+
+      this.velocityY=0;
+
+
+      window.addEventListener(
+        "keydown",
+        e=>{
+          this.keys[e.code]=true;
+        }
+      );
+
+
+      window.addEventListener(
+        "keyup",
+        e=>{
+          this.keys[e.code]=false;
+        }
+      );
+
+    },
+
+
+    tick:function(
+      time,
+      delta
+    ){
+
+      const dt=
+        Math.min(
+          delta/1000,
+          .05
+        );
+
+
+      const object=
+        this.el.object3D;
+
+
+      if(
+        this.keys["Space"] &&
+        object.position.y<=1.71
+      ){
+
+        this.velocityY=5.2;
+
+      }
+
+
+      this.velocityY-=
+        12*dt;
+
+
+      object.position.y+=
+        this.velocityY*dt;
+
+
+      if(
+        object.position.y<1.7
+      ){
+
+        object.position.y=1.7;
+
+        this.velocityY=0;
+
+      }
+
+
+      object.position.x=
+        Math.max(
+          -20.5,
+          Math.min(
+            20.5,
+            object.position.x
+          )
+        );
+
+
+      object.position.z=
+        Math.max(
+          -13,
+          Math.min(
+            13,
+            object.position.z
+          )
+        );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   MOVE TO MACHINE
+========================================================= */
+
+function movePlayerNear(id){
+
+  const machine=
+    machines.find(
+      m=>m.data.id===id
+    );
+
+
+  if(!machine)
+    return;
+
+
+  const p=
+    machine.entity
+    .object3D
+    .position;
+
+
+  document
+    .getElementById(
+      "player"
+    )
+    .object3D
+    .position.set(
+      p.x,
+      1.7,
+      p.z+5
+    );
+
+}
+
+
+/* =========================================================
+   CLOCK
+========================================================= */
+
+function updateClock(){
+
+  document.getElementById(
+    "clock"
+  ).textContent=
+
+    new Date().toLocaleTimeString(
+      "en-GB",
+      {
+        hour12:false
+      }
+    );
+
+}
+
+
+setInterval(
+  updateClock,
+  1000
+);
+
+
+updateClock();
+
+
+/* =========================================================
+   DIGITAL TWIN LOOP
+========================================================= */
+
+setInterval(
+  ()=>{
+
+    machines.forEach(
+      simulateMachine
+    );
+
+
+    if(selectedMachine)
+      updateDashboard();
+
+  },
+  1000
+);
+
+
+/* =========================================================
+   PROXIMITY LOOP
+========================================================= */
+
+setInterval(
+  updateProximity,
+  150
+);
+
+
+/* =========================================================
+   INITIAL
+========================================================= */
+
+selectedMachine=
+  machines[0].data;
+
+
+updateDashboard();
+
+
+highlightMap(
+  "M01"
+);
+
+</script>
+
+</body>
+</html>
